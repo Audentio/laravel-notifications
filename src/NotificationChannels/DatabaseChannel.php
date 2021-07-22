@@ -28,6 +28,7 @@ class DatabaseChannel extends BaseDatabaseChannel
         return [
             'id' => $notification->id,
             'type' => get_class($notification),
+            'kind' => $notification->getKind(),
             'content_type' => $contentTypeId['content_type'],
             'content_id' => $contentTypeId['content_id'],
             'data' => $this->getData($user, $notification),

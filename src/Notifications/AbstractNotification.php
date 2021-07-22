@@ -92,4 +92,5 @@ abstract class AbstractNotification extends Notification
 
     abstract public function getNotificationPreferenceId(): ?string;
     abstract public function getContent(): ?AbstractModel;
+    abstract public function getKind(): string;
 }
