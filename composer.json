@@ -1,0 +1,29 @@
+{
+    "name": "audentio/laravel-notifications",
+    "description": "Base notifications and notification preferences system for Audentio platforms.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jake Booher",
+            "email": "jakeb@audentio.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "ext-json": "*",
+        "audentio/laravel-base": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Audentio\\LaravelNotifications\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Audentio\\LaravelNotifications\\Providers\\NotificationServiceProvider"
+            ]
+        }
+    }
+}
