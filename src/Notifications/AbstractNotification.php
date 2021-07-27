@@ -47,6 +47,11 @@ abstract class AbstractNotification extends Notification
         return $bypass;
     }
 
+    public function getSender(): ?User
+    {
+        return null;
+    }
+
     public function isImportant(): bool
     {
         return false;

@@ -2,11 +2,23 @@
 
 namespace Audentio\LaravelNotifications\Models\Traits;
 
+use App\Models\User;
 use Audentio\LaravelBase\Foundation\Traits\ContentTypeTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait NotificationModelTrait
 {
     use ContentTypeTrait;
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function sender(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sender_user_id');
+    }
 
     public function getMessage(): ?string
     {
@@ -38,6 +50,7 @@ trait NotificationModelTrait
             'type',
             'kind',
             'user_id',
+            'sender_user_id',
             'content_type',
             'content_id',
             'data',

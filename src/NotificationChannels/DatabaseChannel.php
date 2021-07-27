@@ -25,10 +25,12 @@ class DatabaseChannel extends BaseDatabaseChannel
     protected function buildNotificationPayload(User $user, AbstractNotification $notification): array
     {
         $contentTypeId = $notification->getContentTypeId();
+        $sender = $notification->getSender();
         return [
             'id' => $notification->id,
             'type' => get_class($notification),
             'kind' => $notification->getKind(),
+            'sender_user_id' => $sender ? $sender->getKey() : null,
             'content_type' => $contentTypeId['content_type'],
             'content_id' => $contentTypeId['content_id'],
             'data' => $this->getData($user, $notification),
