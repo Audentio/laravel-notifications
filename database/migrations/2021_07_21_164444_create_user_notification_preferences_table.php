@@ -20,7 +20,7 @@ class CreateUserNotificationPreferencesTable extends Migration
             $table->json('disabled_channels')->nullable();
             $table->timestamps();
 
-            $table->unique(['user_id', 'notification_preference_id']);
+            $table->unique(['user_id', 'notification_preference_id'], 'user_notification_preference_id_unique');
         });
     }
 
