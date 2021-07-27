@@ -7,6 +7,13 @@ use Audentio\LaravelNotifications\LaravelNotifications;
 
 trait NotificationContentTrait
 {
+    public static function contentTypeFields__notificationContentTrait(): array
+    {
+        return [
+            'isNotificationContent' => true,
+        ];
+    }
+
     protected static function bootNotificationContentTrait(): void
     {
         static::deleted(function(AbstractModel $model) {
