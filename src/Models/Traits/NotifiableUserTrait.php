@@ -5,9 +5,12 @@ namespace Audentio\LaravelNotifications\Models\Traits;
 use App\Models\Notification;
 use App\Models\NotificationPreference;
 use App\Models\UserNotificationPreference;
+use App\Models\UserPushSubscription;
 use Audentio\LaravelNotifications\NotificationChannels\DatabaseChannel;
+use Audentio\LaravelNotifications\NotificationChannels\MailChannel;
+use Audentio\LaravelNotifications\NotificationChannels\PushNotificationChannel;
+use Audentio\LaravelNotifications\Notifications\AbstractNotification;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Notifications\Channels\MailChannel;
 use Illuminate\Notifications\Notifiable;
 
 trait NotifiableUserTrait
@@ -46,6 +49,13 @@ trait NotifiableUserTrait
             $notificationChannels['email'] = MailChannel::class;
         }
 
+        if (config('audentioNotifications.push_enabled')) {
+            $userPushSubscriptionsExist = UserPushSubscription::where('user_id', $this->id)->exists();
+            if ($userPushSubscriptionsExist) {
+                $notificationChannels['push'] = PushNotificationChannel::class;
+            }
+        }
+
         foreach ($bypassChannels as $bypassChannel) {
             if (array_key_exists($bypassChannel, $notificationChannels)) {
                 unset($notificationChannels[$bypassChannel]);
@@ -76,5 +86,14 @@ trait NotifiableUserTrait
         }
 
         return $return;
+    }
+
+    public function routeNotificationForPush(AbstractNotification $notification): ?array
+    {
+        if (!config('audentioNotifications.push_enabled')) {
+            return null;
+        }
+
+        return UserPushSubscription::where('user_id', $this->id)->get()->all();
     }
 }

@@ -5,30 +5,31 @@ namespace Audentio\LaravelNotifications\Notifications;
 use App\Models\User;
 use App\Models\UserNotificationPreference;
 use Audentio\LaravelBase\Foundation\AbstractModel;
+use Audentio\LaravelNotifications\NotificationChannels\MailChannel;
+use Audentio\LaravelNotifications\PushNotification;
 use Illuminate\Notifications\AnonymousNotifiable;
-use Illuminate\Notifications\Channels\MailChannel;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use function Deployer\Support\array_merge_alternate;
 
 abstract class AbstractNotification extends Notification
 {
     protected bool $bypassChecks = false;
 
-    public function getContentTypeId(): array
+    public function getContentTypeId(bool $withKeys = false): array
     {
         /** @var AbstractModel $content */
         $content = $this->getContent();
-        if (!$content) {
-            return [
-                'content_type' => null,
-                'content_id' => null
-            ];
-        }
 
-        return [
-            'content_type' => $content->getContentType(),
-            'content_id' => $content->getKey(),
+        $return = [
+            'content_type' => $content ? $content->getContentType() : null,
+            'content_id' => $content ? $content->getKey() : null,
         ];
+
+        if (!$withKeys) {
+            return array_keys($return);
+        }
+        return $return;
     }
 
     public function getChannelsToBypass(User $user):  array
@@ -78,6 +79,15 @@ abstract class AbstractNotification extends Notification
         return null;
     }
 
+    public function toPushNotification(User $user): ?PushNotification
+    {
+        if (!config('audentioNotifications.push_enabled')) {
+            return null;
+        }
+
+        return new PushNotification($user, $this);
+    }
+
     public function toDatabase(User $user): array
     {
         return [];
@@ -96,6 +106,7 @@ abstract class AbstractNotification extends Notification
     }
 
     abstract public function getNotificationPreferenceId(): ?string;
-    abstract public function getContent(): ?AbstractModel;
     abstract public function getKind(): string;
+    abstract public function getNotificationMessage(): ?string;
+    abstract public function getContent(): ?AbstractModel;
 }

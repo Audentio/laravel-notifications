@@ -2,6 +2,7 @@
 
 namespace Audentio\LaravelNotifications\Models\Interfaces;
 
+use Audentio\LaravelNotifications\Notifications\AbstractNotification;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 interface NotifiableUserInterface
@@ -12,4 +13,5 @@ interface NotifiableUserInterface
     public function userNotificationPreferences(): HasMany;
     public function getAvailableNotificationChannels(array $bypassChannels): array;
     public function getUserNotificationPreferenceValues(): array;
+    public function routeNotificationForPush(AbstractNotification $notification): ?array;
 }

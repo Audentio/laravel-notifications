@@ -4,11 +4,14 @@ namespace Audentio\LaravelNotifications\Models\Traits;
 
 use App\Models\User;
 use Audentio\LaravelBase\Foundation\Traits\ContentTypeTrait;
+use Audentio\LaravelNotifications\Notifications\AbstractNotification;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait NotificationModelTrait
 {
     use ContentTypeTrait;
+
+    protected AbstractNotification $notificationHandler;
 
     public function user(): BelongsTo
     {
@@ -20,13 +23,30 @@ trait NotificationModelTrait
         return $this->belongsTo(User::class, 'sender_user_id');
     }
 
-    public function getMessage(): ?string
+    public function getNotificationHandler(): ?AbstractNotification
     {
-        if (!$this->content) {
+        $handlerClass = $this->type;
+        if (!class_exists($handlerClass)) {
             return null;
         }
 
-        return $this->content->getNotificationMessage($this);
+        $content = $this->content ?? null;
+
+        if ($content) {
+            return new $handlerClass($content);
+        }
+
+        return new $handlerClass;
+    }
+
+    public function getMessage(): ?string
+    {
+        $handler = $this->getNotificationHandler();
+        if (!$handler) {
+            return null;
+        }
+
+        return $handler->getNotificationMessage();
     }
 
     public function isRead(): bool
