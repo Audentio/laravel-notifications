@@ -27,7 +27,7 @@ abstract class AbstractNotification extends Notification
         ];
 
         if (!$withKeys) {
-            return array_keys($return);
+            return array_values($return);
         }
         return $return;
     }
