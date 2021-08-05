@@ -36,7 +36,11 @@ trait NotificationModelTrait
             return new $handlerClass($content);
         }
 
-        return new $handlerClass;
+        try {
+            return new $handlerClass;
+        } catch (\ArgumentCountError $e) {
+            return null;
+        }
     }
 
     public function getMessage(): ?string
