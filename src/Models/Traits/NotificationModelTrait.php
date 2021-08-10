@@ -58,9 +58,27 @@ trait NotificationModelTrait
         return !!$this->read_at;
     }
 
+    public function isDismissed(): bool
+    {
+        return !!$this->dismissed_at;
+    }
+
     public function markRead(bool $save = true): void
     {
         $this->read_at = now();
+
+        if ($save) {
+            $this->save();
+        }
+    }
+
+    public function dismiss(bool $save = true): void
+    {
+        if (!$this->isRead()) {
+            $this->markRead(false);
+        }
+
+        $this->dismissed_at = now();
 
         if ($save) {
             $this->save();
