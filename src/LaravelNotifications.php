@@ -73,7 +73,7 @@ class LaravelNotifications
 
     public static function queueMassNotification(string $notificationClass, ...$arguments): void
     {
-        $notification = self::getNotificationInstance($notificationClass, $arguments);
+        $notification = call_user_func_array(['self', 'getNotificationInstance'], array_merge([$notificationClass], $arguments));
 
         if (!$notification instanceof MassNotificationInterface) {
             return;
