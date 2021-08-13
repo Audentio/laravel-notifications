@@ -20,7 +20,7 @@ class CreateNotificationRemindersTable extends Migration
             $table->json('data')->nullable();
             $table->timestamp('last_sent_at')->nullable();
             $table->timestamp('next_send_at')->nullable();
-            $table->timestamp('due_at');
+            $table->timestamp('due_at')->nullable();
             $table->timestamps();
         });
     }
