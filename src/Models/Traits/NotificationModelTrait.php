@@ -50,7 +50,7 @@ trait NotificationModelTrait
             return null;
         }
 
-        return $handler->getNotificationMessage();
+        return $handler->getNotificationMessage($this->user);
     }
 
     public function isRead(): bool

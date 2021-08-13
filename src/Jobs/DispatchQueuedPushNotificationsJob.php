@@ -3,7 +3,7 @@
 namespace Audentio\LaravelNotifications\Jobs;
 
 use Audentio\LaravelNotifications\Notifications\AbstractNotification;
-use Audentio\LaravelNotifications\Notifications\Interfaces\AbstractMassNotificationInterface;
+use Audentio\LaravelNotifications\Notifications\Interfaces\MassNotificationInterface;
 use Audentio\LaravelNotifications\PushHandlers\AbstractPushHandler;
 use Audentio\LaravelNotifications\Utils\TimerUtil;
 use Illuminate\Contracts\Queue\ShouldBeUnique;

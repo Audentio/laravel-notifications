@@ -3,7 +3,7 @@
 namespace Audentio\LaravelNotifications\Jobs;
 
 use Audentio\LaravelNotifications\Notifications\AbstractNotification;
-use Audentio\LaravelNotifications\Notifications\Interfaces\AbstractMassNotificationInterface;
+use Audentio\LaravelNotifications\Notifications\Interfaces\MassNotificationInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -13,31 +13,17 @@ class QueueMassNotificationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, SerializesModels;
 
-    protected string $notificationClass;
-    protected array $arguments;
+    /** @var MassNotificationInterface|AbstractNotification */
+    protected MassNotificationInterface $notification;
 
     public function handle(): void
     {
-        try {
-            $reflector = new \ReflectionClass($this->notificationClass);
-        } catch (\ReflectionException $e) {
-            return;
-        }
-
-        /** @var AbstractMassNotificationInterface|AbstractNotification $notification */
-        $notification = $reflector->newInstanceArgs($this->arguments);
-
-        if (!$notification instanceof AbstractMassNotificationInterface) {
-            return;
-        }
-
-        $users = $notification->getUsers();
-        \Notification::send($users, $notification);
+        $users = $this->notification->getUsers();
+        \Notification::send($users, $this->notification);
     }
 
-    public function __construct(string $notificationClass, array $arguments)
+    public function __construct(MassNotificationInterface $notification)
     {
-        $this->notificationClass = $notificationClass;
-        $this->arguments = $arguments;
+        $this->notification = $notification;
     }
 }

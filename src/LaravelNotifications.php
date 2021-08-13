@@ -4,6 +4,9 @@ namespace Audentio\LaravelNotifications;
 
 use App\Models\User;
 use Audentio\LaravelNotifications\Jobs\QueueMassNotificationJob;
+use Audentio\LaravelNotifications\Notifications\AbstractMassNotification;
+use Audentio\LaravelNotifications\Notifications\AbstractNotification;
+use Audentio\LaravelNotifications\Notifications\Interfaces\MassNotificationInterface;
 use Audentio\LaravelNotifications\PushHandlers\AbstractPushHandler;
 
 class LaravelNotifications
@@ -58,9 +61,30 @@ class LaravelNotifications
         $handler->createUserPushSubscription($user->id, $token);
     }
 
+    public static function getNotificationInstance(string $notificationClass, ...$arguments): AbstractNotification
+    {
+        $reflector = new \ReflectionClass($notificationClass);
+
+        /** @var AbstractNotification $notification */
+        $notification = $reflector->newInstanceArgs($arguments);
+
+        return $notification;
+    }
+
     public static function queueMassNotification(string $notificationClass, ...$arguments): void
     {
-        QueueMassNotificationJob::dispatch($notificationClass, $arguments);
+        $notification = self::getNotificationInstance($notificationClass, $arguments);
+
+        if (!$notification instanceof MassNotificationInterface) {
+            return;
+        }
+
+        self::queueMassNotificationInstance($notification);
+    }
+
+    public static function queueMassNotificationInstance(MassNotificationInterface $notification): void
+    {
+        QueueMassNotificationJob::dispatch($notification);
     }
 
     public static function massDelete($contentType, $contentId, ?string $className = null): void

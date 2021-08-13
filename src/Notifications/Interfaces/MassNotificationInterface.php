@@ -4,7 +4,7 @@ namespace Audentio\LaravelNotifications\Notifications\Interfaces;
 
 use Illuminate\Support\Collection;
 
-interface AbstractMassNotificationInterface
+interface MassNotificationInterface
 {
     public function getUsers(): Collection;
 }

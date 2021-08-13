@@ -2,8 +2,11 @@
 
 namespace Audentio\LaravelNotifications\Notifications;
 
-use Audentio\LaravelNotifications\Notifications\Interfaces\AbstractMassNotificationInterface;
+use Audentio\LaravelNotifications\Notifications\Interfaces\MassNotificationInterface;
+use Audentio\LaravelNotifications\Notifications\Traits\MassNotificationTrait;
 
-abstract class AbstractMassNotification extends AbstractNotification implements AbstractMassNotificationInterface
+abstract class AbstractMassNotification extends AbstractNotification implements MassNotificationInterface
 {
+    use MassNotificationTrait;
+
 }

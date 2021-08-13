@@ -2,6 +2,7 @@
 
 namespace Audentio\LaravelNotifications\Providers;
 
+use Audentio\LaravelNotifications\Console\Commands\CronQueueNotificationRemindersCommand;
 use Audentio\LaravelNotifications\Console\Commands\CronQueuePushNotificationJob;
 use Audentio\LaravelNotifications\Console\Commands\DebugPushNotificationJob;
 use Audentio\LaravelNotifications\LaravelNotifications;
@@ -38,6 +39,7 @@ class NotificationServiceProvider extends ServiceProvider
             $this->commands([
                 DebugPushNotificationJob::class,
                 CronQueuePushNotificationJob::class,
+                CronQueueNotificationRemindersCommand::class,
             ]);
         }
     }
