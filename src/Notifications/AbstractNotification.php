@@ -63,6 +63,15 @@ abstract class AbstractNotification extends Notification
         return false;
     }
 
+    public function shouldBypassEmailVerificationCheck($notifiable): bool
+    {
+        if ($notifiable instanceof AnonymousNotifiable) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function via($notifiable): array
     {
         if ($notifiable instanceof AnonymousNotifiable) {

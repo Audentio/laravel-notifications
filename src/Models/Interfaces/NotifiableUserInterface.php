@@ -13,5 +13,6 @@ interface NotifiableUserInterface
     public function userNotificationPreferences(): HasMany;
     public function getAvailableNotificationChannels(array $bypassChannels): array;
     public function getUserNotificationPreferenceValues(): array;
+    public function isEmailVerified(): bool;
     public function routeNotificationForPush(AbstractNotification $notification): ?array;
 }
