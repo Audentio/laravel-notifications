@@ -53,6 +53,16 @@ trait NotificationModelTrait
         return $handler->getNotificationMessage($this->user);
     }
 
+    public function getUrl(): ?string
+    {
+        $handler = $this->getNotificationHandler();
+        if (!$handler) {
+            return null;
+        }
+
+        return $handler->getUrl($this->user);
+    }
+
     public function isRead(): bool
     {
         return !!$this->read_at;

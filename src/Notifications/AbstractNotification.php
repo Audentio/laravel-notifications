@@ -53,6 +53,11 @@ abstract class AbstractNotification extends Notification
         return null;
     }
 
+    public function getUrl($notifiable): ?string
+    {
+        return null;
+    }
+
     public function isImportant(): bool
     {
         return false;

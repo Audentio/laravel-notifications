@@ -29,6 +29,9 @@ class NotificationResource extends GraphQLResource
             'message' => Type::methodValue(Type::string(), 'getMessage', [
                 'with' => ['content'],
             ]),
+            'url' => Type::methodValue(Type::string(), 'getUrl', [
+                'with' => ['content'],
+            ]),
             'kind' => ['type' => Type::nonNull(GraphQL::type('NotificationKindEnum'))],
             'read_at' => ['type' => Type::timestamp()],
             'created_at' => ['type' => Type::timestamp()],

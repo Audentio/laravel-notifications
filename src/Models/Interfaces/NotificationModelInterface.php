@@ -12,6 +12,7 @@ interface NotificationModelInterface
 
     public function getNotificationHandler(): ?AbstractNotification;
     public function getMessage(): ?string;
+    public function getUrl(): ?string;
 
     public function isRead(): bool;
     public function isDismissed(): bool;
