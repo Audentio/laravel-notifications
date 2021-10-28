@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Models;
+
+use Audentio\LaravelNotifications\Models\Interfaces\NotificationPreferenceGroupModelInterface;
+use Audentio\LaravelNotifications\Models\Traits\NotificationPreferenceGroupModelTrait;
+
+class NotificationPreferenceGroup extends AbstractModel implements NotificationPreferenceGroupModelInterface
+{
+    use NotificationPreferenceGroupModelTrait;
+
+    public function getName(): string
+    {
+        throw new \LogicException('You must override NotificationPreferenceGroup.getName');
+    }
+}

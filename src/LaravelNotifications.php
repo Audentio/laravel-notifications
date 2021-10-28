@@ -3,6 +3,7 @@
 namespace Audentio\LaravelNotifications;
 
 use App\Models\User;
+use Audentio\LaravelBase\Utils\ContentTypeUtil;
 use Audentio\LaravelNotifications\Jobs\QueueMassNotificationJob;
 use Audentio\LaravelNotifications\Notifications\AbstractMassNotification;
 use Audentio\LaravelNotifications\Notifications\AbstractNotification;
@@ -12,6 +13,7 @@ use Audentio\LaravelNotifications\PushHandlers\AbstractPushHandler;
 class LaravelNotifications
 {
     protected static bool $runsMigrations = true;
+    protected static bool $addsGraphQLSchema = true;
 
     /** @var AbstractPushHandler[] */
     protected static array $pushHandlers = [];
@@ -24,6 +26,27 @@ class LaravelNotifications
     public static function runsMigrations(): bool
     {
         return self::$runsMigrations;
+    }
+
+    public static function addsGraphQLSchema(): bool
+    {
+        return self::$addsGraphQLSchema;
+    }
+
+    public static function skipGraphQLSchema(): void
+    {
+        self::$addsGraphQLSchema = false;
+    }
+
+    public static function getNotificationContentTypes(): array
+    {
+        $contentTypes = array_keys(ContentTypeUtil::getContentTypeField('isNotificationContent')) ?? [];
+
+        if (!in_array(User::class, $contentTypes)) {
+            $contentTypes[] = 'User';
+        }
+
+        return $contentTypes;
     }
 
     public static function getEnabledChannels(): array

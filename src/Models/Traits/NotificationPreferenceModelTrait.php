@@ -31,4 +31,17 @@ trait NotificationPreferenceModelTrait
 
         return self::$cachedValues;
     }
+
+    protected function initializeNotificationPreferenceModelTrait(): void
+    {
+        $this->fillable = array_merge([
+            'available_channels', 'required_channels'
+        ], $this->fillable);
+
+        $this->casts = array_merge([
+            'available_channels' => 'json',
+            'required_channels' => 'json'
+        ], $this->casts);
+
+    }
 }

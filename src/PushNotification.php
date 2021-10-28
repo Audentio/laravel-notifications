@@ -5,7 +5,6 @@ namespace Audentio\LaravelNotifications;
 use App\Models\User;
 use App\Models\UserPushQueue;
 use App\Models\UserPushSubscription;
-use Audentio\LaravelBase\Utils\ContentTypeUtil;
 use Audentio\LaravelNotifications\Notifications\AbstractNotification;
 use Carbon\Carbon;
 

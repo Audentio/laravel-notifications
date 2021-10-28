@@ -21,7 +21,7 @@ trait UserNotificationPreferenceModelTrait
         ], $this->fillable);
 
         $this->casts = array_merge([
-            'disabled_channels' => 'json',
+            'disabled_channels' => 'json'
         ], $this->casts);
 
         $this->attributes = array_merge([

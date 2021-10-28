@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Models;
+
+use Audentio\LaravelNotifications\Models\Interfaces\NotificationReminderModelInterface;
+use Audentio\LaravelNotifications\Models\Traits\NotificationReminderModelTrait;
+
+class NotificationReminder extends AbstractModel implements NotificationReminderModelInterface
+{
+    use NotificationReminderModelTrait;
+}

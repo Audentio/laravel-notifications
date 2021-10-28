@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Models;
+
+use Audentio\LaravelNotifications\Models\Interfaces\UserPushQueueModelInterface;
+use Audentio\LaravelNotifications\Models\Traits\UserPushQueueModelTrait;
+
+class UserPushQueue extends AbstractModel implements UserPushQueueModelInterface
+{
+    use UserPushQueueModelTrait;
+}

@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Models;
+
+use Audentio\LaravelNotifications\Models\Interfaces\UserNotificationPreferenceModelInterface;
+use Audentio\LaravelNotifications\Models\Traits\UserNotificationPreferenceModelTrait;
+
+class UserNotificationPreference extends AbstractModel implements UserNotificationPreferenceModelInterface
+{
+    use UserNotificationPreferenceModelTrait;
+}

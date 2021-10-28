@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Models;
+
+use Audentio\LaravelNotifications\Models\Interfaces\UserPushSubscriptionModelInterface;
+use Audentio\LaravelNotifications\Models\Traits\UserPushSubscriptionModelTrait;
+
+class UserPushSubscription extends AbstractModel implements UserPushSubscriptionModelInterface
+{
+    use UserPushSubscriptionModelTrait;
+}
