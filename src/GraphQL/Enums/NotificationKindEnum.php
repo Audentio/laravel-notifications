@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Audentio\LaravelNotifications\GraphQL\Enums;
 
 use Audentio\LaravelGraphQL\GraphQL\Support\Enum;
+use Audentio\LaravelNotifications\LaravelNotifications;
 
 class NotificationKindEnum extends Enum
 {
@@ -18,7 +19,7 @@ class NotificationKindEnum extends Enum
 
     public function __construct()
     {
-        $kinds = config('audentioNotifications.notification_kinds');
+        $kinds = LaravelNotifications::getNotificationKinds();
         if (!empty($kinds)) {
             $this->attributes['values'] = $kinds;
         }

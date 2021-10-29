@@ -38,6 +38,15 @@ class LaravelNotifications
         self::$addsGraphQLSchema = false;
     }
 
+    public static function getNotificationKinds(): array
+    {
+        $kinds = config('audentioNotifications.notification_kinds') ?? [];
+
+        $kinds[] = 'sample';
+
+        return $kinds;
+    }
+
     public static function getNotificationContentTypes(): array
     {
         $contentTypes = array_keys(ContentTypeUtil::getContentTypeField('isNotificationContent')) ?? [];
