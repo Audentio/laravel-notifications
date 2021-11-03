@@ -9,4 +9,7 @@ return [
     'push_handler_classes' => [
         'expo' => \Audentio\LaravelNotifications\PushHandlers\ExpoPushHandler::class,
     ],
+
+    'graphQL_schema_overrides' => [],
+    'custom_notification_channel_names' => [],
 ];

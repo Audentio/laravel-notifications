@@ -66,6 +66,11 @@ class LaravelNotifications
             $channels[] = 'push';
         }
 
+        $customChannels = config('audentioNotifications.custom_notification_channel_names') ?? [];
+        foreach ($customChannels as $channel) {
+            $channels[] = $channel;
+        }
+
         return $channels;
     }
 
