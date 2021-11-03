@@ -12,7 +12,7 @@ class NotificationChannelEnum extends Enum
     protected $enumObject = true;
 
     protected $attributes = [
-        'name' => 'NotificationChannel',
+        'name' => 'NotificationChannelEnum',
         'description' => 'An enum type',
         'values' => [],
     ];

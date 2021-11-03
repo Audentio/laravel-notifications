@@ -11,7 +11,7 @@ class PushNotificationHandlerEnum extends Enum
     protected $enumObject = true;
 
     protected $attributes = [
-        'name' => 'PushNotificationHandler',
+        'name' => 'PushNotificationHandlerEnum',
         'description' => 'An enum type',
         'values' => [],
     ];
