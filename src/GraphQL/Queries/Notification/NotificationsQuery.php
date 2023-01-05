@@ -34,6 +34,16 @@ class NotificationsQuery extends Query
     public static function getFilters(): array
     {
         return [
+            'created_at' => [
+                'type' => Type::timestamp(),
+                'hasOperator' => true
+            ],
+            'exclude_ids' => [
+                'type' => Type::listOf(Type::id()),
+                'resolve' => function(Builder $query, $operator, $value) {
+                    $query->whereNotIn('id', $value);
+                }
+            ],
             'isRead' => [
                 'type' => Type::boolean(),
                 'description' => 'Filter the `isRead` state. Leave blank or NULL to include both read and unread.',
