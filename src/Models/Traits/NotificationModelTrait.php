@@ -32,6 +32,10 @@ trait NotificationModelTrait
 
         $content = $this->content ?? null;
 
+        if (method_exists($handlerClass, 'createInstanceForNotification')) {
+            return $handlerClass::createInstanceForNotification($this);
+        }
+
         if ($content) {
             return new $handlerClass($content);
         }
