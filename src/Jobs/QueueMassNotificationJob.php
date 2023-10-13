@@ -2,6 +2,7 @@
 
 namespace Audentio\LaravelNotifications\Jobs;
 
+use App\Core;
 use Audentio\LaravelNotifications\Notifications\AbstractNotification;
 use Audentio\LaravelNotifications\Notifications\Interfaces\MassNotificationInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,13 +14,21 @@ class QueueMassNotificationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, SerializesModels;
 
+    public $tries = 1;
+
     /** @var MassNotificationInterface|AbstractNotification */
     protected MassNotificationInterface $notification;
 
     public function handle(): void
     {
         $users = $this->notification->getUsers();
-        \Notification::send($users, $this->notification);
+
+        try {
+            \Notification::send($users, $this->notification);
+        } catch (\Throwable $e) {
+            // Intentionally ignoring errors here so notifications don't resend.
+            Core::captureException($e);
+        }
     }
 
     public function __construct(MassNotificationInterface $notification)

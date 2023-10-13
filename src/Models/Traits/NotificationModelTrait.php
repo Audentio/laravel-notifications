@@ -13,6 +13,10 @@ trait NotificationModelTrait
 
     protected AbstractNotification $notificationHandler;
 
+    public function content(): MorphTo {
+        return $this->morphTo()->withoutGlobalScope(SoftDeletingScope::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
