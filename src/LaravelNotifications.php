@@ -18,7 +18,7 @@ class LaravelNotifications
     /** @var AbstractPushHandler[] */
     protected static array $pushHandlers = [];
 
-    public static function skipMigrations(): bool
+    public static function skipMigrations(): void
     {
         self::$runsMigrations = false;
     }
