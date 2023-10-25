@@ -134,7 +134,8 @@ class LaravelNotifications
             $conditionals['type'] = $className;
         }
 
-        \DB::table('notifications')->where($conditionals)->chunkById(100, function ($notifications) {
+        $notificationModelClass = config('audentioNotifications.notification_model_class');
+        $notificationModelClass::where($conditionals)->chunkById(100, function ($notifications) {
             $notifications->map(function ($notification) {
                 $notification->delete();
             });
@@ -151,7 +152,8 @@ class LaravelNotifications
             $conditionals['type'] = $className;
         }
 
-        \DB::table('notifications')->where($conditionals)->chunkById(100, function ($notifications) {
+        $notificationModelClass = config('audentioNotifications.notification_model_class');
+        $notificationModelClass::where($conditionals)->chunkById(100, function ($notifications) {
             $notifications->map(function ($notification) {
                 $notification->dismiss();
             });
