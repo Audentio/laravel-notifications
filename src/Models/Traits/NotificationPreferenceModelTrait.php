@@ -23,6 +23,14 @@ trait NotificationPreferenceModelTrait
         ];
     }
 
+    public function shouldDisplay(): bool
+    {
+        if ($this->should_display_callback && is_callable($this->should_display_callback)) {
+            return call_user_func($this->should_display_callback);
+        }
+        return true;
+    }
+
     public static function getCached(): Collection
     {
         if (!isset(self::$cachedValues)) {

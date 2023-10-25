@@ -35,9 +35,32 @@ class NotificationPreferenceGroupsQuery extends Query
     {
         $fields = $getSelectFields();
         $with = $fields->getRelations();
+        if (!in_array('notificationPreferences', $with) && !array_key_exists('notificationPreferences', $with)) {
+            $with[] = 'notificationPreferences';
+        }
         $root->with($with);
 
-        return $root->get();
+        $notificationPreferenceGroups = $root->get();
+
+        $returnValues = [];
+        /** @var NotificationPreferenceGroup $notificationPreferencegroup */
+        foreach ($notificationPreferenceGroups as $notificationPreferenceGroup) {
+            $hasDisplayablePreferences = false;
+            $notificationPreferences = [];
+            foreach ($notificationPreferenceGroup->notificationPreferences as $notificationPreference) {
+                if ($notificationPreference->shouldDisplay()) {
+                    $hasDisplayablePreferences = true;
+                    $notificationPreferences[] = $notificationPreference;
+                }
+            }
+
+            if ($hasDisplayablePreferences) {
+                $notificationPreferenceGroup->setRelation('notificationPreferences', collect($notificationPreferences));
+                $returnValues[] = $notificationPreferenceGroup;
+            }
+        }
+
+        return collect($returnValues);
     }
 
     public function resolve($root, $args, $context, ResolveInfo $info, Closure $getSelectFields)

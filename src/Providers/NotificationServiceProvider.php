@@ -10,7 +10,9 @@ use Audentio\LaravelNotifications\GraphQL\Enums\NotificationChannelEnum;
 use Audentio\LaravelNotifications\GraphQL\Enums\NotificationContentTypeEnum;
 use Audentio\LaravelNotifications\GraphQL\Enums\NotificationKindEnum;
 use Audentio\LaravelNotifications\GraphQL\Enums\PushNotificationHandlerEnum;
+use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\DismissAllNotificationsMutation;
 use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\DismissNotificationMutation;
+use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\MarkReadAllNotificationsMutation;
 use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\MarkReadNotificationMutation;
 use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\SendSampleNotificationMutation;
 use Audentio\LaravelNotifications\GraphQL\Mutations\UserNotificationPreferenceValue\UpdateViewerNotificationPreferenceValueMutation;
@@ -116,7 +118,9 @@ class NotificationServiceProvider extends ServiceProvider
                 ],
                 'mutations' => [
                     'dismissNotification' => DismissNotificationMutation::class,
+                    'dismissAllNotifications' => DismissAllNotificationsMutation::class,
                     'markReadNotification' => MarkReadNotificationMutation::class,
+                    'markReadAllNotifications' => MarkReadAllNotificationsMutation::class,
                     'sendSampleNotification' => SendSampleNotificationMutation::class,
 
                     'updateViewerNotificationPreferenceValue' => UpdateViewerNotificationPreferenceValueMutation::class,

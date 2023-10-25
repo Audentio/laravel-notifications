@@ -60,7 +60,7 @@ class LaravelNotifications
 
     public static function getEnabledChannels(): array
     {
-        $channels = ['notification', 'email'];
+        $channels = ['notification', 'mail'];
 
         if (config('audentioNotifications.push.enabled')) {
             $channels[] = 'push';

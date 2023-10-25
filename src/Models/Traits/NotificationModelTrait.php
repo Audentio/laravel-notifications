@@ -5,6 +5,7 @@ namespace Audentio\LaravelNotifications\Models\Traits;
 use App\Models\User;
 use Audentio\LaravelBase\Foundation\Traits\ContentTypeTrait;
 use Audentio\LaravelNotifications\Notifications\AbstractNotification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait NotificationModelTrait
@@ -27,6 +28,26 @@ trait NotificationModelTrait
         return $this->belongsTo(User::class, 'sender_user_id');
     }
 
+    public function scopeDismissed(Builder $query): void
+    {
+        $query->whereNotNull('dismissed_at');
+    }
+
+    public function scopeNotDismissed(Builder $query): void
+    {
+        $query->whereNull('dismissed_at');
+    }
+
+    public function scopeRead(Builder $query): void
+    {
+        $query->whereNotNull('read_at');
+    }
+
+    public function scopeNotRead(Builder $query): void
+    {
+        $query->whereNull('read_at');
+    }
+
     public function getNotificationHandler(): ?AbstractNotification
     {
         $handlerClass = $this->type;
@@ -35,6 +56,10 @@ trait NotificationModelTrait
         }
 
         $content = $this->content ?? null;
+
+        if (method_exists($handlerClass, 'createInstanceForNotification')) {
+            return $handlerClass::createInstanceForNotification($this);
+        }
 
         if ($content) {
             return new $handlerClass($content);
