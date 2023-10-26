@@ -3,7 +3,8 @@
 namespace Audentio\LaravelNotifications\NotificationReminders;
 
 use Audentio\LaravelBase\Foundation\AbstractModel;
-use Audentio\LaravelNotifications\Notifications\AbstractNotification;
+use Audentio\LaravelNotifications\LaravelNotifications;
+use Audentio\LaravelNotifications\Models\Interfaces\NotificationReminderModelInterface;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Carbon\CarbonInterval;
@@ -98,5 +99,24 @@ abstract class AbstractReminder
         $this->dueDate = new CarbonImmutable($dueDate->toAtomString(), $dueDate->getTimezone());
         $this->setUpIntervals();
         $this->validateIntervals();
+    }
+
+    public function dismissPreviousNotifications(NotificationReminderModelInterface $notificationReminder): void
+    {
+        // Dismiss all previous notifications of this kind as we're about to send a new one
+
+        /** @var AbstractModel $content */
+        $content = $notificationReminder->content;
+        LaravelNotifications::massDismiss($content->getContentType(), $content->getKey(), $notificationReminder->getNotificationClassName());
+    }
+
+    public function onBeforeNotificationFire(NotificationReminderModelInterface $notificationReminder): void
+    {
+        // Optionally do something when this reminder is fired
+    }
+
+    public function onAfterNotificationFire(NotificationReminderModelInterface $notificationReminder): void
+    {
+        // Optionally do something when this reminder is fired
     }
 }
