@@ -99,13 +99,13 @@ class NotificationServiceProvider extends ServiceProvider
         if (LaravelNotifications::addsGraphQLSchema()) {
             $schema = [
                 'types' => [
-                    'NotificationPreferenceGroup' => NotificationPreferenceGroupType::class,
-                    'NotificationPreference' => NotificationPreferenceType::class,
-                    'Notification' => NotificationType::class,
-                    'UserNotificationPreferenceValue' => UserNotificationPreferenceValueType::class,
+                    'NotificationPreferenceGroupType' => NotificationPreferenceGroupType::class,
+                    'NotificationPreferenceType' => NotificationPreferenceType::class,
+                    'NotificationType' => NotificationType::class,
+                    'UserNotificationPreferenceValueType' => UserNotificationPreferenceValueType::class,
 
                     // Union
-                    'NotificationContent' => NotificationContentUnionType::class,
+                    'NotificationContentUnionType' => NotificationContentUnionType::class,
 
                     // Enums
                     'NotificationChannelEnum' => NotificationChannelEnum::class,

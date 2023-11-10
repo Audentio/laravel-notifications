@@ -32,7 +32,7 @@ class NotificationResource extends GraphQLResource
                 }
             ],
             'content_id' => ['type' => Type::id()],
-            'content' => ['type' => GraphQL::type('NotificationContent')],
+            'content' => ['type' => GraphQL::type('NotificationContentUnionType')],
             'message' => Type::methodValue(Type::string(), 'getMessage', [
                 'with' => ['content'],
             ]),

@@ -7,7 +7,7 @@ use Audentio\LaravelNotifications\LaravelNotifications;
 
 class NotificationContentUnionType extends AbstractContentUnionType
 {
-    public $name = 'NotificationContent';
+    public $name = 'NotificationContentUnionType';
 
     protected function _getContentTypes(): array
     {
