@@ -32,7 +32,7 @@ class MarkReadAllNotificationsMutation extends Mutation
 
     public function type(): GraphqlType
     {
-        return new ObjectType([
+        return \GraphQL::newObjectType([
             'name' => lcfirst($this->getActionType() . $this->getResource()->getGraphQLTypeName()),
             'fields' => [
                 lcfirst($this->getActionType() . $this->getResource()->getGraphQLTypeName()) => [

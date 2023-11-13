@@ -28,7 +28,7 @@ class MarkReadNotificationMutation extends Mutation
         return [
             'notification' => [
                 'rules' => ['required'],
-                'type' => new InputObjectType([
+                'type' => \GraphQL::newInputObjectType([
                     'name' => $this->getActionType() . $this->getResource()->getGraphQLTypeName() . 'Data',
                     'fields' => [
                         'id' => [
