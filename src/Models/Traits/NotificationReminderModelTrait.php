@@ -8,6 +8,17 @@ use Audentio\LaravelNotifications\LaravelNotifications;
 use Audentio\LaravelNotifications\NotificationReminders\AbstractReminder;
 use Audentio\LaravelNotifications\Notifications\Interfaces\MassNotificationInterface;
 
+/**
+ * @property Carbon|null $next_send_at
+ * @property Carbon|null $last_sent_at
+ * @property Carbon|null $due_at
+ * @property string $handler_class
+ * @property string $content_type
+ * @property string $content_id
+ * @property array $data
+ * @property mixed $content
+ * @property array $casts
+ */
 trait NotificationReminderModelTrait
 {
     use ContentTypeTrait;
@@ -33,12 +44,16 @@ trait NotificationReminderModelTrait
             $this->delete();
         }
 
+        $this->getHandler()->onBeforeNotificationFire($this);
+        $this->getHandler()->dismissPreviousNotifications($this);
+
         $notification = LaravelNotifications::getNotificationInstance($this->getHandler()->getNotificationClassName(),
             $this->content);
 
         if ($notification instanceof MassNotificationInterface) {
             LaravelNotifications::queueMassNotificationInstance($notification);
         }
+        $this->getHandler()->onAfterNotificationFire($this);
     }
 
     protected function initializeNotificationReminderModelTrait()

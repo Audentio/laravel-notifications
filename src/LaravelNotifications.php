@@ -18,7 +18,7 @@ class LaravelNotifications
     /** @var AbstractPushHandler[] */
     protected static array $pushHandlers = [];
 
-    public static function skipMigrations(): bool
+    public static function skipMigrations(): void
     {
         self::$runsMigrations = false;
     }
@@ -134,7 +134,30 @@ class LaravelNotifications
             $conditionals['type'] = $className;
         }
 
-        \DB::table('notifications')->where($conditionals)->delete();
+        $notificationModelClass = config('audentioNotifications.notification_model_class');
+        $notificationModelClass::where($conditionals)->chunkById(100, function ($notifications) {
+            $notifications->map(function ($notification) {
+                $notification->delete();
+            });
+        });
+    }
+
+    public static function massDismiss($contentType, $contentId, ?string $className = null): void
+    {
+        $conditionals = [
+            ['content_type', $contentType],
+            ['content_id', $contentId],
+        ];
+        if ($className) {
+            $conditionals['type'] = $className;
+        }
+
+        $notificationModelClass = config('audentioNotifications.notification_model_class');
+        $notificationModelClass::where($conditionals)->chunkById(100, function ($notifications) {
+            $notifications->map(function ($notification) {
+                $notification->dismiss();
+            });
+        });
     }
 
 }
