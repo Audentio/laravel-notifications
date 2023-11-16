@@ -129,7 +129,7 @@ class NotificationServiceProvider extends ServiceProvider
 
             if (config('audentioNotifications.push_enabled')) {
                 $schema['types'] = array_merge($schema['types'], [
-                    'UserPushSubscription' => UserPushSubscriptionType::class,
+                    'UserPushSubscriptionType' => UserPushSubscriptionType::class,
 
                     // Enums
                     'PushNotificationHandlerEnum' => PushNotificationHandlerEnum::class,
