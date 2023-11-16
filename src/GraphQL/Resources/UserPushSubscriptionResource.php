@@ -43,6 +43,6 @@ class UserPushSubscriptionResource extends GraphQLResource
 
     public function getGraphQLTypeName(): string
     {
-        return 'UserPushSubscription';
+        return 'UserPushSubscriptionType';
     }
 }

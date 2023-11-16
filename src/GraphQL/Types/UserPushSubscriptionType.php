@@ -10,7 +10,7 @@ use Audentio\LaravelGraphQL\GraphQL\Support\Type as GraphQLType;
 class UserPushSubscriptionType extends GraphQLType
 {
     protected $attributes = [
-        'name' => 'UserPushSubscription',
+        'name' => 'UserPushSubscriptionType',
         'description' => 'A type'
     ];
 
