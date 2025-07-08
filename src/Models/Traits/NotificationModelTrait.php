@@ -79,7 +79,7 @@ trait NotificationModelTrait
             return null;
         }
 
-        return $handler->getNotificationMessage($this->user);
+        return $handler->getNotificationMessage($this, $this->user);
     }
 
     public function getUrl(): ?string
@@ -89,7 +89,7 @@ trait NotificationModelTrait
             return null;
         }
 
-        return $handler->getUrl($this->user);
+        return $handler->getUrl($this, $this->user);
     }
 
     public function isRead(): bool

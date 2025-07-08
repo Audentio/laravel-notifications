@@ -5,6 +5,7 @@ namespace Audentio\LaravelNotifications\Notifications;
 use App\Models\User;
 use App\Models\UserNotificationPreference;
 use Audentio\LaravelBase\Foundation\AbstractModel;
+use Audentio\LaravelNotifications\Models\Interfaces\NotificationModelInterface;
 use Audentio\LaravelNotifications\NotificationChannels\MailChannel;
 use Audentio\LaravelNotifications\PushNotification;
 use Illuminate\Notifications\AnonymousNotifiable;
@@ -53,7 +54,7 @@ abstract class AbstractNotification extends Notification
         return null;
     }
 
-    public function getUrl($notifiable): ?string
+    public function getUrl(NotificationModelInterface $notification, $notifiable): ?string
     {
         return null;
     }
@@ -121,6 +122,6 @@ abstract class AbstractNotification extends Notification
 
     abstract public function getNotificationPreferenceId(): ?string;
     abstract public function getKind(): string;
-    abstract public function getNotificationMessage($notifiable): ?string;
+    abstract public function getNotificationMessage(NotificationModelInterface $notification, $notifiable): ?string;
     abstract public function getContent(): ?AbstractModel;
 }
