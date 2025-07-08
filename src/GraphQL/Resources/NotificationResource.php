@@ -28,6 +28,9 @@ class NotificationResource extends GraphQLResource
             'content_type' => [
                 'type' => GraphQL::type('NotificationContentTypeEnum'),
                 'resolve' => function (NotificationModelInterface $notificationModel) {
+                    if (!$notificationModel->content_type) {
+                        return null;
+                    }
                     return ContentTypeUtil::getFriendlyContentTypeName($notificationModel->content_type);
                 }
             ],
