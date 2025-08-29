@@ -10,21 +10,21 @@ use Illuminate\Notifications\Notification;
 
 class MailChannel extends BaseMailChannel
 {
-    public function send($notifiable, Notification $notification): ?SentMessage
+    public function send($notifiable, Notification $notification)
     {
         if ($notification instanceof AbstractNotification
             && $notifiable instanceof NotifiableUserInterface
             && !$notification->shouldBypassEmailVerificationCheck($notifiable)
             && !$notifiable->isEmailVerified()
         ) {
-            return null;
+            return;
         }
 
         $message = $notification->toMail($notifiable);
         if ($message === null) {
-            return null;
+            return;
         }
 
-        parent::send($notifiable, $notification);
+        return parent::send($notifiable, $notification);
     }
 }
