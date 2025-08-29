@@ -44,6 +44,13 @@ class NotificationsQuery extends Query
                     $query->whereNotIn('id', $value);
                 }
             ],
+            'kind' => [
+                'type' => GraphQL::type('NotificationKindEnum'),
+            ],
+            'kinds' => [
+                'type' => Type::listOf(GraphQL::type('NotificationKindEnum')),
+                'column' => 'kind',
+            ],
             'isRead' => [
                 'type' => Type::boolean(),
                 'description' => 'Filter the `isRead` state. Leave blank or NULL to include both read and unread.',
