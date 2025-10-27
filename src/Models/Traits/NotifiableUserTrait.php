@@ -46,7 +46,7 @@ trait NotifiableUserTrait
         $attributes = $this->attributesToArray();
 
         if (!empty($attributes['email'])) {
-            $notificationChannels['email'] = MailChannel::class;
+            $notificationChannels['mail'] = MailChannel::class;
         }
 
         if (config('audentioNotifications.push_enabled')) {
