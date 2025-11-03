@@ -52,6 +52,11 @@ trait NotificationReminderModelTrait
 
         if ($notification instanceof MassNotificationInterface) {
             LaravelNotifications::queueMassNotificationInstance($notification);
+        } else {
+            $notifiable = $this->content->user ?? null;
+            if ($notifiable) {
+                $notifiable->notify($notification);
+            }
         }
         $this->getHandler()->onAfterNotificationFire($this);
     }
