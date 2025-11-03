@@ -35,7 +35,7 @@ trait NotificationReminderModelTrait
 
     public function queueNotification(): void
     {
-        $nextSendAt = $this->getHandler()->getNextSendTime();
+        $nextSendAt = $this->getHandler()->getNextSendTime($this->last_sent_at);
         if ($nextSendAt) {
             $this->last_sent_at = now();
             $this->next_send_at = $nextSendAt;

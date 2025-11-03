@@ -21,7 +21,7 @@ class CronQueueNotificationRemindersCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Queue pending notification remidners';
+    protected $description = 'Queue pending notification reminders';
 
     /**
      * Create a new command instance.

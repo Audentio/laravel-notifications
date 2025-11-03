@@ -59,6 +59,11 @@ abstract class AbstractReminder
             return null;
         }
 
+        // If no previous send, return the first upcoming time
+        if ($lastSendAt === null) {
+            return $upcomingReminderTimes[0];
+        }
+
         foreach ($upcomingReminderTimes as $reminderTime) {
             if ($reminderTime > $lastSendAt) {
                 return $reminderTime;
