@@ -8,9 +8,10 @@ return [
 
     'push_handler_classes' => [
         'expo' => \Audentio\LaravelNotifications\PushHandlers\ExpoPushHandler::class,
+        'fcm' => \Audentio\LaravelNotifications\PushHandlers\FirebasePushHandler::class,
     ],
 
     'graphQL_schema_overrides' => [],
     'custom_notification_channel_names' => [],
-    'notification_model_class' => \App\Models\Notification::class
+    'notification_model_class' => \App\Models\Notification::class,
 ];

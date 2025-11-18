@@ -132,10 +132,6 @@ class PushResponse
         foreach ($this->getCancelPushSubscriptionUserPushQueues() as $userPushQueue) {
             $userPushQueue->logCancelPushSubscription();
         }
-        /*
-    private array $cancelPushIds = [];
-    private array $cancelPushSubscriptionIds = [];*/
-
     }
 
     public function __construct(Collection $userPushQueues)

@@ -23,7 +23,7 @@ class SampleNotification extends AbstractNotification
         return 'sample';
     }
 
-    public function getNotificationMessage(?NotificationModelInterface $notification, $notifiable): ?string
+    public function getNotificationMessage(?NotificationModelInterface $notification = null): ?string
     {
         return 'This is a sample notification.';
     }

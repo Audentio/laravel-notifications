@@ -41,7 +41,7 @@ class PushNotification
         list($contentType, $contentId) = $notification->getContentTypeId();
 
         $this->data = array_merge([
-            'message' => $notification->getNotificationMessage($user),
+            'message' => $notification->getNotificationMessage(),
             'content_type' => $contentType,
             'content_id' => $contentId,
         ], $extraData);

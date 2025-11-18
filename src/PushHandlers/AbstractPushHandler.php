@@ -28,8 +28,11 @@ abstract class AbstractPushHandler
     public function runBatch(): void
     {
         $userPushQueue = $this->getBatchUserPushQueues();
-        $pushResponse = $this->dispatchPushNotifications($userPushQueue);
-        $pushResponse->handleLogs();
+        $pushResponses = $this->dispatchPushNotifications($userPushQueue);
+
+        foreach ($pushResponses as $pushResponse) {
+            $pushResponse->handleLogs();
+        }
     }
 
     protected function getBatchUserPushQueues(): Collection
@@ -89,6 +92,11 @@ abstract class AbstractPushHandler
     }
 
     abstract public function getIdentifier(): string;
-    abstract public function dispatchPushNotifications(Collection $userPushQueues): PushResponse;
+
+    /**
+     * @param  Collection  $userPushQueues
+     * @return PushResponse[]
+     */
+    abstract public function dispatchPushNotifications(Collection $userPushQueues): array;
     abstract protected function getQueueBatchSize(): int;
 }

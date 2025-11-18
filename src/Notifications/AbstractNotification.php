@@ -122,6 +122,6 @@ abstract class AbstractNotification extends Notification
 
     abstract public function getNotificationPreferenceId(): ?string;
     abstract public function getKind(): string;
-    abstract public function getNotificationMessage(?NotificationModelInterface $notification, $notifiable): ?string;
+    abstract public function getNotificationMessage(?NotificationModelInterface $notification = null): ?string;
     abstract public function getContent(): ?AbstractModel;
 }

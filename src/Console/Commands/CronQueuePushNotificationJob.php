@@ -39,7 +39,7 @@ class CronQueuePushNotificationJob extends Command
     public function handle()
     {
         if (\DB::table('user_push_queues')->where('send_at', '<', now())->count() > 0) {
-            DispatchQueuedPushNotificationsJob::dispatch();
+            DispatchQueuedPushNotificationsJob::dispatchSync();
         }
 
         return 0;

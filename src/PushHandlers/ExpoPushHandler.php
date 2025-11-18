@@ -20,7 +20,11 @@ class ExpoPushHandler extends AbstractPushHandler
         return 'expo';
     }
 
-    public function dispatchPushNotifications(Collection $userPushQueues): PushResponse
+    /**
+     * @param  Collection  $userPushQueues
+     * @return PushResponse[]
+     */
+    public function dispatchPushNotifications(Collection $userPushQueues): array
     {
         list($idMap, $requestPayload) = $this->buildRequestPayload($userPushQueues);
 
@@ -87,7 +91,7 @@ class ExpoPushHandler extends AbstractPushHandler
             $pushResponse->logDelayPushIds($idMap);
         }
 
-        return $pushResponse;
+        return [$pushResponse];
     }
 
     protected function buildRequestPayload(Collection $userPushQueues): array
