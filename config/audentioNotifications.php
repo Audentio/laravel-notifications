@@ -14,4 +14,10 @@ return [
     'graphQL_schema_overrides' => [],
     'custom_notification_channel_names' => [],
     'notification_model_class' => \App\Models\Notification::class,
+
+    'handler_config' => [
+        'fcm' => [
+            'api_key' => config('PUSH_FCM_API_KEY'),
+        ],
+    ],
 ];

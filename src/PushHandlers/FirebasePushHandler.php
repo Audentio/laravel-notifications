@@ -37,6 +37,7 @@ class FirebasePushHandler extends AbstractPushHandler
                     'headers' => [
                         'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
+                        'Authorization' => 'key=' . config('audentioNotifications.handler_config.fcm.api_key'),
                     ],
                     RequestOptions::JSON => $requestPayload,
                 ]);
