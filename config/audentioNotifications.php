@@ -17,7 +17,7 @@ return [
 
     'handler_config' => [
         'fcm' => [
-            'api_key' => config('PUSH_FCM_API_KEY'),
+            'service_account_base64' => env('PUSH_FCM_SERVICE_ACCOUNT_BASE64'),
         ],
     ],
 ];

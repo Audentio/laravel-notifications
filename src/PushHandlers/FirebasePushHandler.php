@@ -6,6 +6,7 @@ use App\Core;
 use App\Models\UserPushQueue;
 use App\Models\UserPushSubscription;
 use Audentio\LaravelNotifications\PushResponse;
+use Google\Auth\Credentials\ServiceAccountCredentials;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
@@ -14,7 +15,8 @@ use Illuminate\Support\Collection;
 
 class FirebasePushHandler extends AbstractPushHandler
 {
-    const FCM_API_URL = 'https://fcm.googleapis.com/fcm/send';
+    const CACHE_VERSION = '2025-12-02 v1';
+    const CACHE_KEY = 'audentioNotifications_fcm_access_token';
 
     public function getIdentifier(): string
     {
@@ -27,76 +29,46 @@ class FirebasePushHandler extends AbstractPushHandler
      */
     public function dispatchPushNotifications(Collection $userPushQueues): array
     {
+        if (!class_exists(ServiceAccountCredentials::class)) {
+            throw new \LogicException('Google Auth library is required for Firebase push notifications. ' .
+                'Please install google/auth via composer.');
+        }
+
+        $serviceAccount = $this->getServiceAccount();
+        $accessToken = $this->getAccessToken();
+        $projectId = $serviceAccount['project_id'];
         $pushResponses = [];
+
         foreach ($userPushQueues as $userPushQueue) {
             $requestPayload = $this->buildUserPushQueuePayload($userPushQueue);
+            $pushResponse = new PushResponse(collect([$userPushQueue]));
             try {
                 $client = new Client;
 
-                $response = $client->post(static::FCM_API_URL, [
+                $client->post('https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send', [
                     'headers' => [
                         'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
-                        'Authorization' => 'key=' . config('audentioNotifications.handler_config.fcm.api_key'),
+                        'Authorization' => 'Bearer ' . $accessToken,
                     ],
-                    RequestOptions::JSON => $requestPayload,
+                    RequestOptions::JSON => [
+                        'message' => $requestPayload,
+                    ],
                 ]);
+                $pushResponse->logSuccessId($userPushQueue->id);
             } catch (ClientException $e) {
                 $response = $e->getResponse();
-                Core::captureException($e);
-                return [];
-            } catch (ServerException $e) {
-                $response = $e->getResponse();
-                Core::captureException($e);
-                return [];
-            } catch (\Throwable $e) {
-                $response = null;
-                Core::captureException($e);
-                return [];
-            }
-            $pushResponse = new PushResponse($userPushQueues);
-
-            if ($response && $response->getStatusCode() === 200) {
-                $data = json_decode($response->getBody()->getContents());
-                if (!isset($data->data)) {
-                    // This should never be possible, but just in case it should be handled.
-                    $pushResponse->logDelayPushIds($idMap);
+                $statusCode = $response->getStatusCode();
+                if ($statusCode === 400) {
+                    $pushResponse->logCancelPushId($userPushQueue->id);
                 } else {
-                    foreach ($data->data as $key=>$push) {
-                        $id = $idMap[$key];
-                        if ($push->status === 'ok') {
-                            $pushResponse->logSuccessId($id);
-                            continue;
-                        }
-
-                        if (!isset($push->details->error)) {
-                            $pushResponse->logDelayPushId($id);
-                            continue;
-                        }
-
-                        $error = $push->details->error;
-                        switch($error) {
-                            case 'DeviceNotRegistered':
-                                $pushResponse->logCancelPushSubscriptionId($id);
-                                break;
-
-                            case 'MismatchSenderId':
-                            case 'MessageTooBig':
-                                $pushResponse->logCancelPushId($id);
-                                break;
-
-                            case 'MessageRateExceeded':
-                                $pushResponse->logDelayPushId($id);
-                                break;
-
-                            default: $pushResponse->logCancelPushId($id);
-                        }
-                    }
+                    Core::captureException($e);
+                    $pushResponse->logDelayPushId($userPushQueue->id);
                 }
-            } else {
-                $pushResponse->logDelayPushIds($idMap);
+            } catch (ServerException $e) {
+                $pushResponse->logCancelPushId($userPushQueue->id);
+                Core::captureException($e);
             }
-
             $pushResponses[] = $pushResponse;
         }
 
@@ -107,15 +79,72 @@ class FirebasePushHandler extends AbstractPushHandler
     {
         /** @var UserPushSubscription $userPushSubscription */
         $userPushSubscription = $userPushQueue->userPushSubscription;
+        $data = $userPushQueue->data;
 
         return [
-            'registration_ids' => [$userPushSubscription->token],
-            'notification' => $userPushQueue->data,
+            'token' => $userPushSubscription->token,
+            'notification' => [
+                'title' => 'Notification',
+                'body' => $data['message'],
+            ],
+            'data' => $data,
         ];
     }
 
     protected function getQueueBatchSize(): int
     {
         return 10;
+    }
+
+    private function getAccessToken(): string
+    {
+        $accessData = $this->getAccessDataFromCache();
+        if (!$accessData) {
+            $accessData = $this->getNewAccessData();
+        }
+
+        return $accessData['access_token'];
+    }
+
+    private function getNewAccessData(bool $store = true): array
+    {
+        $serviceAccount = $this->getServiceAccount();
+        $credentials = new ServiceAccountCredentials(
+            'https://www.googleapis.com/auth/firebase.messaging',
+            $serviceAccount
+        );
+
+        $requestTime = time();
+        $accessData = $credentials->fetchAuthToken();
+        $accessData['expires_at'] = $accessData['expires_in'] + $requestTime;
+        $accessData['version'] = static::CACHE_VERSION;
+        if ($store) {
+            \Cache::put(static::CACHE_KEY, $accessData, $accessData['expires_in'] - 60);
+        }
+
+        return $accessData;
+    }
+
+    private function getAccessDataFromCache(): ?array
+    {
+        $accessData = \Cache::get(static::CACHE_KEY);
+        if (!$accessData) {
+            return null;
+        }
+
+        if (empty($accessData['expires_at']) || $accessData['expires_at'] <= time() + 60) {
+            return null;
+        }
+
+        if (empty($accessData['version']) || $accessData['version'] !== static::CACHE_VERSION) {
+            return null;
+        }
+
+        return $accessData;
+    }
+
+    private function getServiceAccount(): array
+    {
+        return json_decode(base64_decode(config('audentioNotifications.handler_config.fcm.service_account_base64')), true);
     }
 }
