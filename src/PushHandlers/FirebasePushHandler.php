@@ -45,7 +45,7 @@ class FirebasePushHandler extends AbstractPushHandler
             try {
                 $client = new Client;
 
-                $client->post('https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send', [
+                $request = $client->post('https://fcm.googleapis.com/v1/projects/' . $projectId . '/messages:send', [
                     'headers' => [
                         'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
@@ -59,15 +59,13 @@ class FirebasePushHandler extends AbstractPushHandler
             } catch (ClientException $e) {
                 $response = $e->getResponse();
                 $statusCode = $response->getStatusCode();
-                if ($statusCode === 400) {
-                    $pushResponse->logCancelPushId($userPushQueue->id);
-                } else {
-                    Core::captureException($e);
+                if ($statusCode == 429) {
                     $pushResponse->logDelayPushId($userPushQueue->id);
+                } {
+                    $pushResponse->logCancelPushId($userPushQueue->id);
                 }
             } catch (ServerException $e) {
                 $pushResponse->logCancelPushId($userPushQueue->id);
-                Core::captureException($e);
             }
             $pushResponses[] = $pushResponse;
         }
