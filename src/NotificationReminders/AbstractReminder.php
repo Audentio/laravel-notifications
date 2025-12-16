@@ -112,7 +112,7 @@ abstract class AbstractReminder
 
         /** @var AbstractModel $content */
         $content = $notificationReminder->content;
-        LaravelNotifications::massDismiss($content->getContentType(), $content->getKey(), $notificationReminder->getNotificationClassName());
+        LaravelNotifications::massDelete($content->getContentType(), $content->getKey(), $notificationReminder->getNotificationClassName());
     }
 
     public function onBeforeNotificationFire(NotificationReminderModelInterface $notificationReminder): void
