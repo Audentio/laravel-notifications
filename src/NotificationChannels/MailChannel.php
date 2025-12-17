@@ -25,6 +25,23 @@ class MailChannel extends BaseMailChannel
             return;
         }
 
-        return parent::send($notifiable, $notification);
+        $result = parent::send($notifiable, $notification);
+
+        if (extension_loaded('newrelic')) {
+            $eventData = [
+                'notification_type' => get_class($notification),
+                'channel' => 'mail',
+                'notifiable_type' => get_class($notifiable),
+                'notifiable_id' => $notifiable->getKey(),
+            ];
+
+            if (isset($notifiable->realm) && $notifiable->realm) {
+                $eventData['realm'] = $notifiable->realm->name;
+            }
+
+            newrelic_record_custom_event('NotificationSent', $eventData);
+        }
+
+        return $result;
     }
 }

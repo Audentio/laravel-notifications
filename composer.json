@@ -25,5 +25,8 @@
                 "Audentio\\LaravelNotifications\\Providers\\NotificationServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "ostrolucky/polyfill-newrelic": "^1.0"
     }
 }

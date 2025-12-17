@@ -25,5 +25,21 @@ class PushNotificationChannel
         foreach ($userPushSubscriptions as $userPushSubscription) {
             $pushNotification->queue($userPushSubscription);
         }
+
+        if (extension_loaded('newrelic')) {
+            $eventData = [
+                'notification_type' => get_class($notification),
+                'channel' => 'push',
+                'notifiable_type' => get_class($user),
+                'notifiable_id' => $user->getKey(),
+                'subscription_count' => count($userPushSubscriptions),
+            ];
+
+            if (isset($user->realm) && $user->realm) {
+                $eventData['realm'] = $user->realm->name;
+            }
+
+            newrelic_record_custom_event('NotificationSent', $eventData);
+        }
     }
 }
