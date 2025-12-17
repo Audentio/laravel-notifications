@@ -9,6 +9,29 @@ use Illuminate\Notifications\Notification;
 
 class DatabaseChannel extends BaseDatabaseChannel
 {
+    public function send($notifiable, Notification $notification)
+    {
+        $result = parent::send($notifiable, $notification);
+
+        if (extension_loaded('newrelic')) {
+            $eventData = [
+                'notification_type' => get_class($notification),
+                'channel' => 'database',
+                'notifiable_type' => get_class($notifiable),
+                'notifiable_id' => $notifiable->getKey(),
+            ];
+    
+            if (isset($notifiable->realm) && $notifiable->realm) {
+                $eventData['realm'] = $notifiable->realm->name;
+            }
+    
+            newrelic_record_custom_event('NotificationSent', $eventData);
+        }
+
+        return $result;
+    }
+
+
     protected function buildPayload($notifiable, Notification $notification)
     {
         /** @var User $notifiable */
