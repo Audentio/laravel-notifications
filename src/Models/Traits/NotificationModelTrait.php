@@ -111,6 +111,15 @@ trait NotificationModelTrait
         }
     }
 
+    public function markUnread(bool $save = true): void
+    {
+        $this->read_at = null;
+
+        if ($save) {
+            $this->save();
+        }
+    }
+
     public function dismiss(bool $save = true): void
     {
         if (!$this->isRead()) {
