@@ -14,6 +14,7 @@ use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\DismissAllNotif
 use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\DismissNotificationMutation;
 use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\MarkReadAllNotificationsMutation;
 use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\MarkReadNotificationMutation;
+use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\MarkUnreadNotificationMutation;
 use Audentio\LaravelNotifications\GraphQL\Mutations\Notification\SendSampleNotificationMutation;
 use Audentio\LaravelNotifications\GraphQL\Mutations\UserNotificationPreferenceValue\UpdateViewerNotificationPreferenceValueMutation;
 use Audentio\LaravelNotifications\GraphQL\Queries\Notification\NotificationsQuery;
@@ -120,6 +121,7 @@ class NotificationServiceProvider extends ServiceProvider
                     'dismissNotification' => DismissNotificationMutation::class,
                     'dismissAllNotifications' => DismissAllNotificationsMutation::class,
                     'markReadNotification' => MarkReadNotificationMutation::class,
+                    'markUnreadNotification' => MarkUnreadNotificationMutation::class,
                     'markReadAllNotifications' => MarkReadAllNotificationsMutation::class,
                     'sendSampleNotification' => SendSampleNotificationMutation::class,
 
