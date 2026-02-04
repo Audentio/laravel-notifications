@@ -44,6 +44,7 @@ class PushNotification
             'message' => $notification->getNotificationMessage(),
             'content_type' => $contentType,
             'content_id' => $contentId,
+            'url' => $notification->getUrl(null, $user),
         ], $extraData);
     }
 }
