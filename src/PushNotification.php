@@ -23,7 +23,7 @@ class PushNotification
         if (!$sendAt) {
             $sendAt = now();
         }
-
+        
         UserPushQueue::create([
             'handler_class' => $userPushSubscription->handler_class,
             'user_id' => $this->user->id,
@@ -45,6 +45,7 @@ class PushNotification
             'content_type' => $contentType,
             'content_id' => $contentId,
             'url' => $notification->getUrl(null, $user),
+            'notification_id' => $notification->id,
         ], $extraData);
     }
 }
