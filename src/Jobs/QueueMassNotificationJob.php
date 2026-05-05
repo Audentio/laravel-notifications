@@ -24,13 +24,17 @@ class QueueMassNotificationJob implements ShouldQueue
     /** @var MassNotificationInterface|AbstractNotification */
     protected MassNotificationInterface $notification;
 
-    /** @var Collection|User[] */
-    protected Collection $remainingUsers;
+    /** @var Collection|User[]|null */
+    protected ?Collection $remainingUsers;
 
     protected int $limit = 100;
 
     public function handle(): void
     {
+        if ($this->remainingUsers === null) {
+            $this->remainingUsers = $this->notification->getUsers();
+        }
+
         $remainingUsers = $this->remainingUsers;
 
         $timer = new TimerUtil(45);
@@ -59,11 +63,6 @@ class QueueMassNotificationJob implements ShouldQueue
     public function __construct(MassNotificationInterface $notification, ?Collection $remainingUsers = null)
     {
         $this->notification = $notification;
-
-        if ($remainingUsers) {
-            $this->remainingUsers = $remainingUsers;
-        } else {
-            $this->remainingUsers = $this->notification->getUsers();
-        }
+        $this->remainingUsers = $remainingUsers;
     }
 }
