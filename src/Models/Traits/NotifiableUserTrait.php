@@ -35,7 +35,7 @@ trait NotifiableUserTrait
 
     public function userNotificationPreferences(): HasMany
     {
-        return $this->hasMany(UserNotificationPreference::class);
+        return $this->hasMany(UserNotificationPreference::class, 'user_id');
     }
 
     public function getAvailableNotificationChannels(array $bypassChannels): array

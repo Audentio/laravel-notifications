@@ -14,9 +14,28 @@
         "ext-json": "*",
         "audentio/laravel-base": "^1.1|^2.0"
     },
+    "require-dev": {
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0"
+    },
     "autoload": {
         "psr-4": {
             "Audentio\\LaravelNotifications\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Models\\": "tests/Fixtures/Models/",
+            "Audentio\\LaravelNotifications\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     },
     "extra": {

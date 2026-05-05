@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 trait NotificationPreferenceModelTrait
 {
-    protected static Collection $cachedValues;
+    protected static ?Collection $cachedValues = null;
 
     public function notificationPreferenceGroup(): BelongsTo
     {
@@ -25,7 +25,7 @@ trait NotificationPreferenceModelTrait
 
     public static function resetCache(): void
     {
-        unset(self::$cachedValues);
+        self::$cachedValues = null;
     }
 
     public function shouldDisplay(): bool
@@ -38,7 +38,7 @@ trait NotificationPreferenceModelTrait
 
     public static function getCached(): Collection
     {
-        if (!isset(self::$cachedValues)) {
+        if (self::$cachedValues === null) {
             self::$cachedValues = self::get();
         }
 
