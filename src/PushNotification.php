@@ -23,7 +23,7 @@ class PushNotification
         if (!$sendAt) {
             $sendAt = now();
         }
-        
+
         UserPushQueue::create([
             'handler_class' => $userPushSubscription->handler_class,
             'user_id' => $this->user->id,

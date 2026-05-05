@@ -19,8 +19,13 @@ trait NotificationPreferenceModelTrait
     {
         return [
             'notification_preference_id' => $this->id,
-            'disabled_channels' => [],
+            'disabled_channels' => $this->default_disabled_channels ?? [],
         ];
+    }
+
+    public static function resetCache(): void
+    {
+        unset(self::$cachedValues);
     }
 
     public function shouldDisplay(): bool
@@ -43,12 +48,13 @@ trait NotificationPreferenceModelTrait
     protected function initializeNotificationPreferenceModelTrait(): void
     {
         $this->fillable = array_merge([
-            'available_channels', 'required_channels'
+            'available_channels', 'required_channels', 'default_disabled_channels'
         ], $this->fillable);
 
         $this->casts = array_merge([
             'available_channels' => 'json',
-            'required_channels' => 'json'
+            'required_channels' => 'json',
+            'default_disabled_channels' => 'json',
         ], $this->casts);
 
     }

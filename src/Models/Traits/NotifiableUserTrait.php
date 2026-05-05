@@ -12,6 +12,7 @@ use Audentio\LaravelNotifications\NotificationChannels\PushNotificationChannel;
 use Audentio\LaravelNotifications\Notifications\AbstractNotification;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 
 trait NotifiableUserTrait
 {
@@ -65,20 +66,33 @@ trait NotifiableUserTrait
         return array_values($notificationChannels);
     }
 
+    public function getNotificationPreferenceTenantDefaults(): Collection
+    {
+        return collect();
+    }
+
     public function getUserNotificationPreferenceValues(): array
     {
         $notificationPreferences = NotificationPreference::getCached();
         $userNotificationPreferences = $this->userNotificationPreferences;
+        $tenantDefaults = $this->getNotificationPreferenceTenantDefaults();
 
         $return = [];
         foreach ($notificationPreferences as $notificationPreference) {
-            $disabledChannels = [];
-
             /** @var UserNotificationPreference|null $userNotificationPreference */
-            $userNotificationPreference = $userNotificationPreferences->where('notification_preference_id', $notificationPreference->id)->first();
+            $userNotificationPreference = $userNotificationPreferences
+                ->where('notification_preference_id', $notificationPreference->id)->first();
+
             if ($userNotificationPreference) {
                 $disabledChannels = $userNotificationPreference->disabled_channels ?? [];
+            } else {
+                $tenantDefault = $tenantDefaults
+                    ->where('notification_preference_id', $notificationPreference->id)->first();
+                $disabledChannels = $tenantDefault !== null
+                    ? ($tenantDefault->disabled_channels ?? [])
+                    : ($notificationPreference->default_disabled_channels ?? []);
             }
+
             $return[] = [
                 'notification_preference_id' => $notificationPreference->id,
                 'disabled_channels' => $disabledChannels,

@@ -27,6 +27,9 @@ class NotificationPreferenceResource extends GraphQLResource
             'required_channels' => [
                 'type' => Type::listOf(GraphQL::type('NotificationChannelEnum')),
             ],
+            'default_disabled_channels' => [
+                'type' => Type::listOf(GraphQL::type('NotificationChannelEnum')),
+            ],
         ];
     }
 
